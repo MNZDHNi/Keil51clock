@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 1   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   51   1          LCD_ShowNum(1,7,DS1302_Time[2],2);
   52   1          LCD_ShowNum(2,1,DS1302_Time[3],2);
   53   1          LCD_ShowNum(2,4,DS1302_Time[4],2);
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 2   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 2   
 
   54   1          LCD_ShowNum(2,7,DS1302_Time[5],2);
   55   1      }
@@ -126,7 +126,7 @@ line level    source
  113   3                  if(DS1302_Time[2] < 1) {DS1302_Time[2] = 30;}
  114   3                  if(DS1302_Time[2] > 30) {DS1302_Time[2] = 1;}
  115   3              }
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 3   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 3   
 
  116   2              else if(DS1302_Time[1] == 2)
  117   2              {
@@ -190,7 +190,7 @@ line level    source
  175   3                  if(clock[2] > 30) {clock[2] = 1;}
  176   3              }
  177   2              else if(clock[1] == 2)
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 4   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 4   
 
  178   2              {
  179   3                  if(clock[0] % 4 == 0)
@@ -254,7 +254,7 @@ line level    source
  237   2              else if(clock[1] == 2)
  238   2              {
  239   3                  if(clock[0] % 4 == 0)
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 5   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 5   
 
  240   3                  {
  241   4                      if(clock[2] < 1) {clock[2] = 29;}
@@ -318,7 +318,7 @@ line level    source
  299   1          if(KeyNum == 2) //开始计时(清零并重新计时)
  300   1          {
  301   2              //清空实时时间
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 6   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 6   
 
  302   2              NowTime.StopHour = 0;
  303   2              NowTime.StopMinute = 0;
@@ -382,7 +382,7 @@ line level    source
  361   3                  NowTime.StopSecond_2 = (NowTime.StopSecond_2 - 10);
  362   3                  NowTime.StopSecond_1++;
  363   3      
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 7   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 7   
 
  364   3                  if(NowTime.StopSecond_1 == 10)
  365   3                  {
@@ -446,7 +446,7 @@ line level    source
  423   1      
  424   1          //初始化时钟模块
  425   1          DS1302_Init();
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 8   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 8   
 
  426   1          DS1302_SetTime();
  427   1      
@@ -466,7 +466,7 @@ line level    source
  441   4      
  442   4                      //初始化模式显示
  443   4                      LCD_ShowString(1,1,"  -  -   MODE");
- 444   4                      LCD_ShowString(2,1,"  :  :   SET");
+ 444   4                      LCD_ShowString(2,1,"  :  :   SET ");
  445   4      
  446   4                      //初始化时间位
  447   4                      TimeSetSelect = 0;
@@ -497,7 +497,7 @@ line level    source
  472   4      
  473   4                      //初始化模式显示
  474   4                      LCD_ShowString(1,1,"  :      MODE");
- 475   4                      LCD_ShowString(2,1,"  .      S-W");
+ 475   4                      LCD_ShowString(2,1,"  .      S-W  ");
  476   4                  }
  477   3                  else if (MODE == 3){
  478   4                      MODE = 0;   //进入 TimeShow
@@ -510,7 +510,7 @@ line level    source
  485   4                      StopWatchFlag = 0;
  486   4                  }
  487   3              }
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 9   
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 9   
 
  488   2              
  489   2              //MODE 显示
@@ -559,28 +559,33 @@ line level    source
  532          //函数定义部分
  533          void ClearStopNum()
  534          {
- 535   1          StopTimeNum = 0;
- 536   1          StopTimeNumSelect = 0;
- 537   1      
- 538   1          for(char i = 0; i < 10; i++)
-*** ERROR C141 IN LINE 538 OF main.c: syntax error near 'char'
-*** ERROR C202 IN LINE 538 OF main.c: 'i': undefined identifier
-*** ERROR C202 IN LINE 538 OF main.c: 'i': undefined identifier
-*** ERROR C202 IN LINE 538 OF main.c: 'i': undefined identifier
-*** ERROR C141 IN LINE 538 OF main.c: syntax error near ')'
- 539   1          {
- 540   2              StopTimeArray[i].StopHour = 0;
- 541   2              StopTimeArray[i].StopMinute = 0;
-*** ERROR C202 IN LINE 541 OF main.c: 'i': undefined identifier
- 542   2              StopTimeArray[i].StopSecond_0 = 0;
-*** ERROR C202 IN LINE 542 OF main.c: 'i': undefined identifier
-C51 COMPILER V9.54   MAIN                                                                  06/07/2025 16:09:32 PAGE 10  
+ 535   1              unsigned char i;
+ 536   1              
+ 537   1          StopTimeNum = 0;
+ 538   1          StopTimeNumSelect = 0;
+ 539   1      
+ 540   1          for(i = 0; i < 10; i++)
+ 541   1          {
+ 542   2              StopTimeArray[i].StopHour = 0;
+ 543   2              StopTimeArray[i].StopMinute = 0;
+ 544   2              StopTimeArray[i].StopSecond_0 = 0;
+ 545   2              StopTimeArray[i].StopSecond_1 = 0;
+ 546   2              StopTimeArray[i].StopSecond_2 = 0;
+ 547   2          }
+ 548   1      }
 
- 543   2              StopTimeArray[i].StopSecond_1 = 0;
-*** ERROR C202 IN LINE 543 OF main.c: 'i': undefined identifier
- 544   2              StopTimeArray[i].StopSecond_2 = 0;
-*** ERROR C202 IN LINE 544 OF main.c: 'i': undefined identifier
- 545   2          }
- 546   1      }
+C51 COMPILER V9.54   MAIN                                                                  06/07/2025 17:03:54 PAGE 10  
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  9 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2791    ----
+   CONSTANT SIZE    =     91    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     74    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

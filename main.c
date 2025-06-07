@@ -441,7 +441,7 @@ void main()
 
                 //初始化模式显示
                 LCD_ShowString(1,1,"  -  -   MODE");
-                LCD_ShowString(2,1,"  :  :   SET");
+                LCD_ShowString(2,1,"  :  :   SET ");
 
                 //初始化时间位
                 TimeSetSelect = 0;
@@ -472,7 +472,7 @@ void main()
 
                 //初始化模式显示
                 LCD_ShowString(1,1,"  :      MODE");
-                LCD_ShowString(2,1,"  .      S-W");
+                LCD_ShowString(2,1,"  .      S-W  ");
             }
             else if (MODE == 3){
                 MODE = 0;   //进入 TimeShow
@@ -532,10 +532,12 @@ void Timer1_ISR(void) interrupt 3
 //函数定义部分
 void ClearStopNum()
 {
+	unsigned char i;
+	
     StopTimeNum = 0;
     StopTimeNumSelect = 0;
 
-    for(char i = 0; i < 10; i++)
+    for(i = 0; i < 10; i++)
     {
         StopTimeArray[i].StopHour = 0;
         StopTimeArray[i].StopMinute = 0;

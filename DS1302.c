@@ -83,7 +83,7 @@ void DS1302_SetTime()
 
 void DS1302_ReadTime()
 {
-    unsigned cahr Temp;
+    unsigned char Temp;
     Temp = DS1302_ReadByte(DS1302_YEAR);
     DS1302_Time[0] = Temp/16*10+Temp%16;
     Temp = DS1302_ReadByte(DS1302_MONTH);

@@ -18,24 +18,26 @@ Hex Converter:   OH51.exe V2.7.0.0
 CPU DLL:         S8051.DLL V3.100.0.0
 Dialog DLL:      DP51.DLL V2.62.0.1 
 <h2>Project:</h2>
-D:\KeilProject\51clockU\project.uvproj
+D:\codeku\Keil51clock\project.uvproj
 Project File Date:  06/07/2025
 
 <h2>Output:</h2>
 Build target 'Target 1'
-compiling DS1302.c...
-DS1302.c(86): error C141: syntax error near 'Temp'
 compiling main.c...
-main.c(538): error C141: syntax error near 'char'
-main.c(538): error C202: 'i': undefined identifier
-main.c(538): error C202: 'i': undefined identifier
-main.c(538): error C202: 'i': undefined identifier
-main.c(538): error C141: syntax error near ')'
-main.c(541): error C202: 'i': undefined identifier
-main.c(542): error C202: 'i': undefined identifier
-main.c(543): error C202: 'i': undefined identifier
-main.c(544): error C202: 'i': undefined identifier
-Target not created.
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_SHOWCHAR?LCD1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_SHOWSIGNEDNUM?LCD1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_SHOWHEXNUM?LCD1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_SHOWBINNUM?LCD1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TIMER2_INIT?TIME
+Program Size: data=116.0 xdata=0 code=4491
+creating hex file from ".\Objects\project"...
+".\Objects\project" - 0 Error(s), 5 Warning(s).
 </pre>
 </body>
 </html>
