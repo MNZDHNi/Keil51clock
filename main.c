@@ -9,6 +9,9 @@ unsigned char KeyNum, MODE, TimeSetSelect, TimeSetFlashFlag;  //键值 模式值
 
 //闹钟值定义
 unsigned char clock[5]; //年月日 时分秒
+char Alarm;             //是否有闹钟
+int CheakFlag;          //判断标志位
+sbit FMQ = P2^5;        //定义蜂鸣器引脚
 
 //秒表
 struct StopTime
@@ -41,7 +44,9 @@ unsigned char StopWatchAddFlag;     //秒表累计状态位
 */
 
 //函数声明部分
-void ClearStopNum();
+void ClearStopNum();                //清除秒表存储
+void FMQBeep(unsigned int time);    //蜂鸣器发声
+int Cheak();                        //检测闹钟时间是否达到
 
 void TimeShow() //MODE 0 显示时间
 {
@@ -154,8 +159,23 @@ void AlarmSet() //MODE 2 设置闹钟
     //设置闹钟时间
     if(KeyNum == 2)
     {
-        TimeSetSelect++;
-        TimeSetSelect %= 6;
+        if(!Alarm)
+        {
+            Alarm = 1;  //有闹钟
+
+            //赋值clock
+            clock[0] = DS1302_Time[0];
+            clock[1] = DS1302_Time[1];
+            clock[2] = DS1302_Time[2];
+            clock[3] = DS1302_Time[3];
+            clock[4] = DS1302_Time[4];
+            clock[5] = DS1302_Time[5];
+        }
+        else
+        {
+            TimeSetSelect++;
+            TimeSetSelect %= 6;
+        }
     }
     if(KeyNum == 3)
     {
@@ -279,6 +299,8 @@ void AlarmSet() //MODE 2 设置闹钟
         {clock[5] = DS1302_Time[5];}
     }
 
+    if(Alarm)   //进入闹钟设置，开始闪烁
+    {
     //闹钟时间实时显示，已写入 clock[]
     if(TimeSetSelect == 0 && TimeSetFlashFlag == 1) {LCD_ShowString(1,1,"  ");}
     else {LCD_ShowNum(1,1,clock[0],2);}
@@ -292,6 +314,7 @@ void AlarmSet() //MODE 2 设置闹钟
     else {LCD_ShowNum(2,4,clock[4],2);}
     if(TimeSetSelect == 5 && TimeSetFlashFlag == 1) {LCD_ShowString(2,7,"  ");}
     else {LCD_ShowNum(2,7,clock[5],2);}
+    }
 }
 
 void StopWatch()    //MODE 3 秒表
@@ -419,7 +442,7 @@ void main()
 {
     //初始化定时器
     Timer0_Init();
-    Timer1_Init();
+    Timer2_Init();
 
     //初始化时钟模块
     DS1302_Init();
@@ -456,23 +479,23 @@ void main()
                 LCD_ShowString(1,1,"  -  -   MODE");
                 LCD_ShowString(2,1,"  :  :   ALARM");
 
-                //初始化时间位
-                TimeSetSelect = 0;
+                //初始化数字显示
+                LCD_ShowNum(1,1,DS1302_Time[0],2);
+                LCD_ShowNum(1,4,DS1302_Time[1],2);
+                LCD_ShowNum(1,7,DS1302_Time[2],2);
+                LCD_ShowNum(2,1,DS1302_Time[3],2);
+                LCD_ShowNum(2,4,DS1302_Time[4],2);
+                LCD_ShowNum(2,7,DS1302_Time[5],2);
 
-                //将当前新设置的时间写入 clock[]，完成初始化
-                clock[0] = DS1302_Time[0];
-                clock[1] = DS1302_Time[1];
-                clock[2] = DS1302_Time[2];
-                clock[3] = DS1302_Time[3];
-                clock[4] = DS1302_Time[4];
-                clock[5] = DS1302_Time[5];
+                //初始化时间位
+                TimeSetSelect = 0;    
             }
             else if (MODE == 2){
                 MODE = 3;   //进入 StopWatch
 
                 //初始化模式显示
-                LCD_ShowString(1,1,"  :      MODE");
-                LCD_ShowString(2,1,"  .      S-W  ");
+                LCD_ShowString(1,1,"00:00    MODE");
+                LCD_ShowString(2,1,"00.00    S-W  ");
             }
             else if (MODE == 3){
                 MODE = 0;   //进入 TimeShow
@@ -484,6 +507,33 @@ void main()
                 //清零秒表模式
                 StopWatchFlag = 0;
             }
+        }
+
+        //闹钟检测
+        CheakFlag = Cheak();
+        if(CheakFlag && Alarm && (MODE == 0))
+        {
+            CheakFlag = 0;
+            Alarm = 0;
+
+            LCD_ShowString(1,1,"  -  -   MODE");
+            LCD_ShowString(2,1,"  :  :   BELL ");
+
+            LCD_ShowNum(1,1,clock[0],2);
+            LCD_ShowNum(1,4,clock[1],2);
+            LCD_ShowNum(1,7,clock[2],2);
+            LCD_ShowNum(2,1,clock[3],2);
+            LCD_ShowNum(2,4,clock[4],2);
+            LCD_ShowNum(2,7,clock[5],2);
+
+            FMQBeep(1500);
+
+            MODE = 0;   //进入 TimeShow
+            //初始化模式显示
+            LCD_ShowString(1,1,"  -  -   MODE");
+            LCD_ShowString(2,1,"  :  :   SHOW ");
+            //清零秒表模式
+            StopWatchFlag = 0;
         }
         
         //MODE 显示
@@ -502,9 +552,9 @@ void Timer0_ISR(void) interrupt 1
 {
     static unsigned int T0Count;
 
-    TH0 = 0xFC;        // 重装初值
+    TH0 = 0xFC;        
     TL0 = 0x67;
-    // 这里添加1ms定时任务代码
+    
     T0Count++;
     if(T0Count >= 500)
     {
@@ -516,11 +566,17 @@ void Timer0_ISR(void) interrupt 1
 
 void Timer1_ISR(void) interrupt 3 
 {
-    static unsigned int T1Count;
-
-    TH1 = 0xFC;        // 重装初值
+    TH1 = 0xFC;        
     TL1 = 0x67;
-    // 这里添加1ms定时任务代码
+    
+    FMQ = !FMQ;
+}
+
+void Timer2_ISR(void) interrupt 5 
+{
+    static unsigned int T1Count;
+    TF2 = 0;           
+ 
     T1Count++;
     if(T1Count >= 10)
     {
@@ -545,4 +601,25 @@ void ClearStopNum()
         StopTimeArray[i].StopSecond_1 = 0;
         StopTimeArray[i].StopSecond_2 = 0;
     }
+}
+
+void FMQBeep(unsigned int time)
+{
+    Timer1_Init();
+
+    Delay(time);
+
+    TR1 = 0;
+    FMQ = 0;
+}
+
+int Cheak()
+{
+    DS1302_ReadTime();
+    if(DS1302_Time[0] == clock[0] && DS1302_Time[1] == clock[1] &&
+       DS1302_Time[2] == clock[2] && DS1302_Time[3] == clock[3] &&
+       DS1302_Time[4] == clock[4] && DS1302_Time[5] == clock[5])
+    {return 1;}
+    else
+    {return 0;}
 }
